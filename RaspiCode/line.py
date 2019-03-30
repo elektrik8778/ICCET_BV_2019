@@ -14,16 +14,16 @@ def line(img, ser):
 
     if len(contours) > 0:
         c = max(contours, key=cv2.contourArea)
-        M = cv2.moments(c)
-        cx = int(M['m10'] / (M['m00']+0.0001))
-        cy = int(M['m01'] / (M['m00']+0.0001))
-
-        cv2.drawContours(crop_img, contours, -1, (255, 255, 255), 1)
-
-        # вывод управляющего сигнала, а лучше брать сх)
-        s = str(cx) + '\n'
-        print(s)
-        ser.write(s.encode())
-        s = ''
-       
-        #cv2.imshow('cframe', crop_img)
+        (x, y, w, h) = cv2.boundingRect(c)
+        if w < 130:
+            M = cv2.moments(c)
+            cx = int(M['m10'] / (M['m00']+0.0001))
+            cy = int(M['m01'] / (M['m00']+0.0001))
+            s = '222' + str(cx) + '\n'
+            ser.write(s.encode())
+            s = ''
+            res = ('line')
+        else:
+            res = ('cross')
+            
+        return res
